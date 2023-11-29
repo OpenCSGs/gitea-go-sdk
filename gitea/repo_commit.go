@@ -8,6 +8,7 @@ package gitea
 import (
 	"fmt"
 	"net/url"
+	"strconv"
 	"time"
 )
 
@@ -70,18 +71,41 @@ type CommitAffectedFiles struct {
 	Filename string `json:"filename"`
 }
 
+type SpeedUpOtions struct {
+	Stat         bool `json:"stat"`
+	Verification bool `json:"verification"`
+	Files        bool `json:"files"`
+}
+
+func (opt *SpeedUpOtions) setDefaultSpeedUpOtions(query *url.Values) {
+	if opt.Files {
+		query.Add("files", strconv.FormatBool(opt.Files))
+	}
+	if opt.Stat {
+		query.Add("stat", strconv.FormatBool(opt.Stat))
+	}
+	if opt.Verification {
+		query.Add("verification", strconv.FormatBool(opt.Verification))
+	}
+}
+
 // GetSingleCommit returns a single commit
-func (c *Client) GetSingleCommit(user, repo, commitID string) (*Commit, *Response, error) {
+func (c *Client) GetSingleCommit(user, repo, commitID string, opts SpeedUpOtions) (*Commit, *Response, error) {
 	if err := escapeValidatePathSegments(&user, &repo, &commitID); err != nil {
 		return nil, nil, err
 	}
+	link, _ := url.Parse(fmt.Sprintf("/repos/%s/%s/git/commits/%s", user, repo, commitID))
+	query := make(url.Values)
+	opts.setDefaultSpeedUpOtions(&query)
+	link.RawQuery = query.Encode()
 	commit := new(Commit)
-	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/repos/%s/%s/git/commits/%s", user, repo, commitID), nil, nil, &commit)
+	resp, err := c.getParsedResponse("GET", link.String(), nil, nil, &commit)
 	return commit, resp, err
 }
 
 // ListCommitOptions list commit options
 type ListCommitOptions struct {
+	SpeedUpOtions
 	ListOptions
 	// SHA or branch to start listing commits from (usually 'master')
 	SHA string
@@ -98,6 +122,7 @@ func (opt *ListCommitOptions) QueryEncode() string {
 	if opt.Path != "" {
 		query.Add("path", opt.Path)
 	}
+	opt.setDefaultSpeedUpOtions(&query)
 	return query.Encode()
 }
 
