@@ -13,7 +13,7 @@ Note: function arguments are escaped by the SDK.
 ## Use it
 
 ```go
-import "code.gitea.io/sdk/gitea"
+import "github.com/pulltheflower/gitea-go-sdk/gitea"
 ```
 
 ## Version Requirements
