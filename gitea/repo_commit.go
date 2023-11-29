@@ -8,7 +8,6 @@ package gitea
 import (
 	"fmt"
 	"net/url"
-	"strconv"
 	"time"
 )
 
@@ -72,20 +71,20 @@ type CommitAffectedFiles struct {
 }
 
 type SpeedUpOtions struct {
-	Stat         bool `json:"stat"`
-	Verification bool `json:"verification"`
-	Files        bool `json:"files"`
+	DisableStat         bool `json:"disable_stat"`
+	DisableVerification bool `json:"disable_sverification"`
+	DisableFiles        bool `json:"disable_sfiles"`
 }
 
 func (opt *SpeedUpOtions) setDefaultSpeedUpOtions(query *url.Values) {
-	if opt.Files {
-		query.Add("files", strconv.FormatBool(opt.Files))
+	if opt.DisableStat {
+		query.Add("files", "false")
 	}
-	if opt.Stat {
-		query.Add("stat", strconv.FormatBool(opt.Stat))
+	if opt.DisableStat {
+		query.Add("stat", "false")
 	}
-	if opt.Verification {
-		query.Add("verification", strconv.FormatBool(opt.Verification))
+	if opt.DisableStat {
+		query.Add("verification", "false")
 	}
 }
 
