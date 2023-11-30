@@ -94,14 +94,15 @@ func (c *Client) ListAccessTokens(opts ListAccessTokensOptions) ([]*AccessToken,
 
 // CreateAccessTokenOption options when create access token
 type CreateAccessTokenOption struct {
-	Name   string             `json:"name"`
-	Scopes []AccessTokenScope `json:"scopes"`
+	Username string             `json:"username"`
+	Name     string             `json:"name"`
+	Scopes   []AccessTokenScope `json:"scopes"`
 }
 
 // CreateAccessToken create one access token with options
 func (c *Client) CreateAccessToken(opt CreateAccessTokenOption) (*AccessToken, *Response, error) {
 	c.mutex.RLock()
-	username := c.username
+	username := opt.Username
 	c.mutex.RUnlock()
 	if len(username) == 0 {
 		return nil, nil, fmt.Errorf("\"username\" not set: only BasicAuth allowed")
