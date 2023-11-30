@@ -99,6 +99,12 @@ type CreateAccessTokenOption struct {
 	Scopes   []AccessTokenScope `json:"scopes"`
 }
 
+// CreateAccessTokenOption options when delete access token
+type DeleteAccessTokenOption struct {
+	Username string      `json:"username"`
+	Value    interface{} `json:"name"`
+}
+
 // CreateAccessToken create one access token with options
 func (c *Client) CreateAccessToken(opt CreateAccessTokenOption) (*AccessToken, *Response, error) {
 	c.mutex.RLock()
@@ -117,9 +123,9 @@ func (c *Client) CreateAccessToken(opt CreateAccessTokenOption) (*AccessToken, *
 }
 
 // DeleteAccessToken delete token, identified by ID and if not available by name
-func (c *Client) DeleteAccessToken(value interface{}) (*Response, error) {
+func (c *Client) DeleteAccessToken(opt DeleteAccessTokenOption) (*Response, error) {
 	c.mutex.RLock()
-	username := c.username
+	username := opt.Username
 	c.mutex.RUnlock()
 	if len(username) == 0 {
 		return nil, fmt.Errorf("\"username\" not set: only BasicAuth allowed")
@@ -127,14 +133,14 @@ func (c *Client) DeleteAccessToken(value interface{}) (*Response, error) {
 
 	token := ""
 
-	switch reflect.ValueOf(value).Kind() {
+	switch reflect.ValueOf(opt.Value).Kind() {
 	case reflect.Int64:
-		token = fmt.Sprintf("%d", value.(int64))
+		token = fmt.Sprintf("%d", opt.Value.(int64))
 	case reflect.String:
 		if err := c.checkServerVersionGreaterThanOrEqual(version1_13_0); err != nil {
 			return nil, err
 		}
-		token = value.(string)
+		token = opt.Value.(string)
 	default:
 		return nil, fmt.Errorf("only string and int64 supported")
 	}
