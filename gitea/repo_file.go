@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"net/url"
 	"strings"
+	"time"
 )
 
 // FileOptions options for all file APIs
@@ -95,14 +96,16 @@ type ContentsResponse struct {
 }
 
 type DirResponse struct {
-	Path      string `json:"path"`
-	Mode      string `json:"mode"`
-	Type      string `json:"type"`
-	Size      int64  `json:"size"`
-	SHA       string `json:"sha"`
-	URL       string `json:"url"`
-	CommitMsg string `json:"commit_msg"`
-	IsLfs     bool   `json:"is_lfs"`
+	Name          string    `json:"name"`
+	Path          string    `json:"path"`
+	Mode          string    `json:"mode"`
+	Type          string    `json:"type"`
+	Size          int64     `json:"size"`
+	SHA           string    `json:"sha"`
+	URL           string    `json:"url"`
+	CommitMsg     string    `json:"commit_msg"`
+	CommitterDate time.Time `json:"committer_date"`
+	IsLfs         bool      `json:"is_lfs"`
 }
 
 // FileCommitResponse contains information generated from a Git commit for a repo's file.
