@@ -195,7 +195,7 @@ func (c *Client) GetDir(owner, repo, branch, dir string) ([]*DirResponse, *Respo
 		return nil, nil, err
 	}
 	dir = pathEscapeSegments(strings.TrimPrefix(dir, "/"))
-	data, resp, err := c.getResponse("GET", fmt.Sprintf("/repos/%s/%s/git/dir?path=%s&&branch=%s", owner, repo, dir, url.QueryEscape(branch)), jsonHeader, nil)
+	data, resp, err := c.getResponse("GET", fmt.Sprintf("/repos/%s/%s/git/dir?path=%s&branch=%s", owner, repo, dir, url.QueryEscape(branch)), jsonHeader, nil)
 	if err != nil {
 		return nil, resp, err
 	}
