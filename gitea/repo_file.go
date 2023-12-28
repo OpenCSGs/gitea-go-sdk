@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"net/url"
 	"strings"
+	"time"
 )
 
 // FileOptions options for all file APIs
@@ -92,6 +93,19 @@ type ContentsResponse struct {
 	// `submodule_git_url` is populated when `type` is `submodule`, otherwise null
 	SubmoduleGitURL *string            `json:"submodule_git_url"`
 	Links           *FileLinksResponse `json:"_links"`
+}
+
+type DirResponse struct {
+	Name          string    `json:"name"`
+	Path          string    `json:"path"`
+	Mode          string    `json:"mode"`
+	Type          string    `json:"type"`
+	Size          int64     `json:"size"`
+	SHA           string    `json:"sha"`
+	URL           string    `json:"url"`
+	CommitMsg     string    `json:"commit_msg"`
+	CommitterDate time.Time `json:"committer_date"`
+	IsLfs         bool      `json:"is_lfs"`
 }
 
 // FileCommitResponse contains information generated from a Git commit for a repo's file.
@@ -174,6 +188,23 @@ func (c *Client) GetContents(owner, repo, ref, filepath string) (*ContentsRespon
 		return nil, resp, fmt.Errorf("expect file, got directory")
 	}
 	return cr, resp, err
+}
+
+func (c *Client) GetDir(owner, repo, branch, dir string) ([]*DirResponse, *Response, error) {
+	if err := escapeValidatePathSegments(&owner, &repo); err != nil {
+		return nil, nil, err
+	}
+	dir = pathEscapeSegments(strings.TrimPrefix(dir, "/"))
+	data, resp, err := c.getResponse("GET", fmt.Sprintf("/repos/%s/%s/git/dir?path=%s&branch=%s", owner, repo, dir, url.QueryEscape(branch)), jsonHeader, nil)
+	if err != nil {
+		return nil, resp, err
+	}
+	drl := make([]*DirResponse, 0)
+	if json.Unmarshal(data, &drl) != nil {
+		return nil, resp, fmt.Errorf("bad reponse format: %w", err)
+	}
+
+	return drl, resp, err
 }
 
 // ListContents gets a list of entries in a dir
