@@ -96,11 +96,12 @@ type ContentsResponse struct {
 }
 
 type DirResponse struct {
-	Name            string    `json:"name"`
-	Path            string    `json:"path"`
-	Mode            string    `json:"mode"`
-	Type            string    `json:"type"`
-	Size            int64     `json:"size"`
+	Name string `json:"name"`
+	Path string `json:"path"`
+	Mode string `json:"mode"`
+	Type string `json:"type"`
+	Size int64  `json:"size"`
+	// `sha` is the ObjectID of the git entry
 	SHA             string    `json:"sha"`
 	URL             string    `json:"url"`
 	CommitMsg       string    `json:"commit_msg"`
@@ -108,6 +109,8 @@ type DirResponse struct {
 	IsLfs           bool      `json:"is_lfs"`
 	LfsRelativePath string    `json:"lfs_relative_path"`
 	DownloadURL     string    `json:"download_url"`
+	// `last_commit_sha` is the SHA of the last commit
+	LastCommitSHA string `json:"last_commit_sha"`
 }
 
 // FileCommitResponse contains information generated from a Git commit for a repo's file.
