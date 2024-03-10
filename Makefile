@@ -6,7 +6,7 @@ GITEA_SDK_TEST_URL ?= http://localhost:3000
 GITEA_SDK_TEST_USERNAME ?= test01
 GITEA_SDK_TEST_PASSWORD ?= test01
 
-PACKAGE := github.com/OpenCSGs/gitea-go-sdk/gitea
+PACKAGE := github.com/pulltheflower/gitea-go-sdk/gitea
 
 GOFUMPT_PACKAGE ?= mvdan.cc/gofumpt@v0.4.0
 GOLANGCI_LINT_PACKAGE ?= github.com/golangci/golangci-lint/cmd/golangci-lint@v1.51.0

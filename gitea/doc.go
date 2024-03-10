@@ -6,4 +6,4 @@
 // The version corresponds to the highest supported version
 // of the gitea API, but backwards-compatibility is mostly
 // given.
-package gitea // import "github.com/OpenCSGs/gitea-go-sdk/gitea"
+package gitea // import "github.com/pulltheflower/gitea-go-sdk/gitea"
