@@ -1,4 +1,4 @@
-module github.com/OpenCSGs/gitea-go-sdk/gitea
+module github.com/pulltheflower/gitea-go-sdk/gitea
 
 go 1.13
 
