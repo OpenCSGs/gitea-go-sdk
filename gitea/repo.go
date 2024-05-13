@@ -446,6 +446,14 @@ type EditRepoOption struct {
 	// set to `true` to archive this repository.
 }
 
+type CreatePushMirrorOption struct {
+	RemoteAddress  string `json:"remote_address"`
+	RemoteUsername string `json:"remote_username"`
+	RemotePassword string `json:"remote_password"`
+	Interval       string `json:"interval"`
+	SyncOnCommit   bool   `json:"sync_on_commit"`
+}
+
 // EditRepo edit the properties of a repository
 func (c *Client) EditRepo(owner, reponame string, opt EditRepoOption) (*Repository, *Response, error) {
 	if err := escapeValidatePathSegments(&owner, &reponame); err != nil {
@@ -475,6 +483,20 @@ func (c *Client) MirrorSync(owner, repo string) (*Response, error) {
 		return nil, err
 	}
 	_, resp, err := c.getResponse("POST", fmt.Sprintf("/repos/%s/%s/mirror-sync", owner, repo), nil, nil)
+	return resp, err
+}
+
+// CreatePushMirror creates a push mirror for the repo
+func (c *Client) CreatePushMirror(owner, repo string, opt CreatePushMirrorOption) (*Response, error) {
+	if err := escapeValidatePathSegments(&owner, &repo); err != nil {
+		return nil, err
+	}
+
+	body, err := json.Marshal(&opt)
+	if err != nil {
+		return nil, err
+	}
+	_, resp, err := c.getResponse("POST", fmt.Sprintf("/repos/%s/%s/push_mirror", owner, repo), jsonHeader, bytes.NewReader(body))
 	return resp, err
 }
 
