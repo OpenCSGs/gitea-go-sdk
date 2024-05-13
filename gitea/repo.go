@@ -500,6 +500,7 @@ func (c *Client) CreatePushMirror(owner, repo string, opt CreatePushMirrorOption
 	if err != nil {
 		return nil, err
 	}
+
 	_, resp, err := c.getResponse("POST", fmt.Sprintf("/repos/%s/%s/push_mirrors", owner, repo), jsonHeader, bytes.NewReader(body))
 	return resp, err
 }
