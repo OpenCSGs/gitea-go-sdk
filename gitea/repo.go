@@ -100,6 +100,15 @@ type Repository struct {
 // RepoType represent repo type
 type RepoType string
 
+type Task struct {
+	Status    int    `json:"status"`
+	Message   string `json:"message"`
+	RepoID    string `json:"repo-id"`
+	RepoName  string `json:"repo-name"`
+	StartedAt int64  `json:"start"`
+	EndedAt   int64  `json:"end`
+}
+
 const (
 	// RepoTypeNone dont specify a type
 	RepoTypeNone RepoType = ""

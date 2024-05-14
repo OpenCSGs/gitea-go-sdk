@@ -94,7 +94,7 @@ func (opt *MigrateRepoOption) Validate(c *Client) error {
 //
 // To migrate a repository for a organization, the authenticated user must be a
 // owner of the specified organization.
-func (c *Client) MigrateRepo(opt MigrateRepoOption) (*Repository, *Response, error) {
+func (c *Client) MigrateRepo(opt MigrateRepoOption) (*Task, *Response, error) {
 	if err := opt.Validate(c); err != nil {
 		return nil, nil, err
 	}
@@ -126,7 +126,7 @@ func (c *Client) MigrateRepo(opt MigrateRepoOption) (*Repository, *Response, err
 	if err != nil {
 		return nil, nil, err
 	}
-	repo := new(Repository)
+	repo := new(Task)
 	resp, err := c.getParsedResponse("POST", "/repos/migrate", jsonHeader, bytes.NewReader(body), repo)
 	return repo, resp, err
 }
