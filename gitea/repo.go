@@ -101,12 +101,7 @@ type Repository struct {
 type RepoType string
 
 type Task struct {
-	Status    int    `json:"status"`
-	Message   string `json:"message"`
-	RepoID    string `json:"repo-id"`
-	RepoName  string `json:"repo-name"`
-	StartedAt int64  `json:"start"`
-	EndedAt   int64  `json:"end"`
+	ID int64 `json:"id"`
 }
 
 const (
