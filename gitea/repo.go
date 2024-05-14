@@ -106,7 +106,7 @@ type Task struct {
 	RepoID    string `json:"repo-id"`
 	RepoName  string `json:"repo-name"`
 	StartedAt int64  `json:"start"`
-	EndedAt   int64  `json:"end`
+	EndedAt   int64  `json:"end"`
 }
 
 const (
