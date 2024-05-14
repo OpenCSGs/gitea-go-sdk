@@ -80,7 +80,7 @@ func (c *Client) GetMyUserInfo() (*User, *Response, error) {
 // GetMyUserInfo get user info of current user
 func (c *Client) GetUserTaskInfo(taskId int64) (*TaskStatus, *Response, error) {
 	t := new(TaskStatus)
-	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/user/%s", strconv.FormatInt(taskId, 10)), nil, nil, t)
+	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/user/task/%s", strconv.FormatInt(taskId, 10)), nil, nil, t)
 	return t, resp, err
 }
 
