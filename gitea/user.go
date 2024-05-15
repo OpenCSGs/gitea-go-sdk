@@ -51,6 +51,15 @@ type User struct {
 	StarredRepoCount int `json:"starred_repos_count"`
 }
 
+type TaskStatus struct {
+	Status    int    `json:"status"`
+	Message   string `json:"message"`
+	RepoID    string `json:"repo-id"`
+	RepoName  string `json:"repo-name"`
+	StartedAt int64  `json:"start"`
+	EndedAt   int64  `json:"end"`
+}
+
 // GetUserInfo get user info by user's name
 func (c *Client) GetUserInfo(user string) (*User, *Response, error) {
 	if err := escapeValidatePathSegments(&user); err != nil {
@@ -66,6 +75,13 @@ func (c *Client) GetMyUserInfo() (*User, *Response, error) {
 	u := new(User)
 	resp, err := c.getParsedResponse("GET", "/user", nil, nil, u)
 	return u, resp, err
+}
+
+// GetMyUserInfo get user info of current user
+func (c *Client) GetUserTaskInfo(taskId int64) (*TaskStatus, *Response, error) {
+	t := new(TaskStatus)
+	resp, err := c.getParsedResponse("GET", fmt.Sprintf("/user/task/%s", strconv.FormatInt(taskId, 10)), nil, nil, t)
+	return t, resp, err
 }
 
 // GetUserByID returns user by a given user ID

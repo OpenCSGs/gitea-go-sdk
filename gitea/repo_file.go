@@ -138,6 +138,35 @@ type FileDeleteResponse struct {
 	Verification *PayloadCommitVerification `json:"verification"`
 }
 
+type ChangeFilesOptions struct {
+	FileOptions
+	// list of file operations
+	// required: true
+	Files []*ChangeFileOperation `json:"files" binding:"Required"`
+}
+
+type ChangeFileOperation struct {
+	// indicates what to do with the file
+	// required: true
+	// enum: create,update,delete
+	Operation string `json:"operation" binding:"Required"`
+	// path to the existing or new file
+	// required: true
+	Path string `json:"path" binding:"Required;MaxSize(500)"`
+	// new or updated file content, must be base64 encoded
+	ContentBase64 string `json:"content"`
+	// sha is the SHA for the file that already exists, required for update or delete
+	SHA string `json:"sha"`
+	// old path of the file to move
+	FromPath string `json:"from_path"`
+}
+
+type FilesResponse struct {
+	Files        []*ContentsResponse        `json:"files"`
+	Commit       *FileCommitResponse        `json:"commit"`
+	Verification *PayloadCommitVerification `json:"verification"`
+}
+
 // GetFile downloads a file of repository, ref can be branch/tag/commit.
 // it optional can resolve lfs pointers and server the file instead
 // e.g.: ref -> master, filepath -> README.md (no leading slash)
@@ -251,6 +280,26 @@ func (c *Client) CreateFile(owner, repo, filepath string, opt CreateFileOptions)
 	}
 	fr := new(FileResponse)
 	resp, err := c.getParsedResponse("POST", fmt.Sprintf("/repos/%s/%s/contents/%s", owner, repo, filepath), jsonHeader, bytes.NewReader(body), fr)
+	return fr, resp, err
+}
+
+func (c *Client) ModifyMultipleFiles(owner, repo string, opt ChangeFilesOptions) (*FilesResponse, *Response, error) {
+	var err error
+	if opt.BranchName, err = c.setDefaultBranchForOldVersions(owner, repo, opt.BranchName); err != nil {
+		return nil, nil, err
+	}
+
+	if err := escapeValidatePathSegments(&owner, &repo); err != nil {
+		return nil, nil, err
+	}
+
+	body, err := json.Marshal(&opt)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	fr := new(FilesResponse)
+	resp, err := c.getParsedResponse("POST", fmt.Sprintf("/repos/%s/%s/contents/", owner, repo), jsonHeader, bytes.NewReader(body), fr)
 	return fr, resp, err
 }
 
