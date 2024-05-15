@@ -54,7 +54,7 @@ type User struct {
 type TaskStatus struct {
 	Status    int    `json:"status"`
 	Message   string `json:"message"`
-	RepoID    string `json:"repo-id"`
+	RepoID    int64  `json:"repo-id"`
 	RepoName  string `json:"repo-name"`
 	StartedAt int64  `json:"start"`
 	EndedAt   int64  `json:"end"`
