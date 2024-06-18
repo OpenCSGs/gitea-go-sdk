@@ -49,6 +49,7 @@ type MigrateRepoOption struct {
 	MirrorInterval string         `json:"mirror_interval"`
 	LFS            bool           `json:"lfs"`
 	LFSEndpoint    string         `json:"lfs_endpoint"`
+	Token          string         `json:"token"`
 }
 
 // Validate the MigrateRepoOption struct
